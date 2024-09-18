@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'simple_history', #PARA GUARDAR HISTORIAL DE CADA CAMBIO EN LA BDD
     'apps.users',
+    'apps.products',
+    'apps.base',
 ]
 
 
