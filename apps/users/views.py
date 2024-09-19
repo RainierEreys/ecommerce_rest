@@ -1,3 +1,5 @@
+from django.contrib.sessions.models import Session
+from datetime import datetime
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -26,6 +28,13 @@ class Login(ObtainAuthToken):
                         'message': 'Inicio de sesion exitoso'
                         }, status=status.HTTP_200_OK)
                 else:
+                    ##PARA ELIMINAR OTRAS SESIONES ACTIVAS
+                    all_sessions = Session.objects.filter(expire_date__gte = datetime.now())
+                    if all_sessions.exists():
+                        for session in all_sessions:
+                            sessions_data = session.get_decoded()
+                            if user.id == int(sessions_data.get('_auth_user_id')):
+                                session.delete()
                     token.delete()
                     token = Token.objects.create(user=user)
                     return Response({'message': 'accesio con otro token',
