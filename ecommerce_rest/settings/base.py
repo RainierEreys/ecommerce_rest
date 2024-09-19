@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.products',
     'apps.base',
+    'rest_framework.authtoken',
 ]
 
 
