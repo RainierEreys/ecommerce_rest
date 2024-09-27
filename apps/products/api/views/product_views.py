@@ -14,9 +14,15 @@ class ProductListAPIView(generics.ListAPIView):
     
 class ProductCreateAPIView(generics.CreateAPIView):
     serializer_class = ProductWriteSerializer
+    # queryset = Product.objects.filer
     
-    # def post(self, request):
-    #     print(request.data)
+    def post(self, request):
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'El producto se ha registrado exitosamente'})
+        
+        return Response(serializer.errors)
     
 class ProductRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
