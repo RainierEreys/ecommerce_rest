@@ -1,0 +1,2 @@
+djangorestframework==3.14.0
+django-simple-history==3.4.0
