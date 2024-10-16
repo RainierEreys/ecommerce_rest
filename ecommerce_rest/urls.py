@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from apps.users.views import Login, LogOut
+from apps.users.views import Login, LogOut, UserToken
 
 
 urlpatterns = [
@@ -24,5 +24,6 @@ urlpatterns = [
     path('usuario/', include('apps.users.api.urls')),
     path('products/', include('apps.products.api.routers')),
     path('', Login.as_view(), name='Login'),
-    path('logout/', LogOut.as_view(), name='Login')
+    path('refresh-token', UserToken.as_view(), name='refresh_token'),
+    path('logout/', LogOut.as_view(), name='Logout')
 ]

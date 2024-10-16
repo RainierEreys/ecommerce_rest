@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token #modelo para obtener token para los usuarios que puedan acceder
 from rest_framework.authtoken.views import ObtainAuthToken
 from apps.users.api.serializers import UserTokenSerializer
+from apps.users.authentication_mixins import Authentication
 
 #para hacer la fecha y hora consientes de la zona horaria
 def get_aware_time():
@@ -15,6 +16,16 @@ def get_aware_time():
     print(f'esta es ingenua {naive_datetime}')
     print(f'esta es consciente {aware_datetime}')
     return aware_datetime
+
+class UserToken(Authentication, APIView):
+    def get(self, request,*args, **kwargs):
+        print(self.user)
+        try:
+            user_token,_ = Token.objects.get_or_create(user = self.user)
+            user = UserTokenSerializer(self.user)
+            return Response({'token':user_token.key, 'user':user.data},) 
+        except:
+            return Response({'message': 'Credenciales incorrectas'}, status=status.HTTP_400_BAD_REQUEST)
 
 class Login(ObtainAuthToken):
     

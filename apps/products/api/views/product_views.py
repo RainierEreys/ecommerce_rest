@@ -1,18 +1,25 @@
 from apps.products.models import MeasureUnit, CategoryProduct, Product, Indicador
 from rest_framework.response import Response
 from rest_framework import status, viewsets
-from apps.users.authentication_mixins import Authentication
 from rest_framework import generics
+from apps.users.authentication_mixins import Authentication
 from apps.products.api.serializers.product_serializer import ProductSerializer, ProductWriteSerializer
 
 class ProductViewSet(Authentication, viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = ProductSerializer.Meta.model.objects.filter(state=True)
+    
+    def list(self, request):
+        print(self.user) #MUESTRA EL USER GRACIAS A QUE HEREDA 'AUTHENTICATION'
+        product_serializer = self.get_serializer(self.queryset, many=True)
+        return Response(product_serializer.data, status=status.HTTP_200_OK)
 
 class ProductListAPIView(generics.ListAPIView):
+    
     serializer_class = ProductSerializer
     
     def get_queryset(self):
+        
         products = Product.objects.filter(state=True)
         return products
     
